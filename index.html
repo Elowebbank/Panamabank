@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Panama International Bank – Educational Demo</title>
+
+  <style>
+    :root {
+      --primary: #00695c;
+      --primary-dark: #004d40;
+      --light: #f5f5f5;
+      --gray: #e0e0e0;
+      --dark: #263238;
+      --success: #2e7d32;
+      --danger: #c62828;
+    }
+    * { box-sizing: border-box; margin:0; padding:0; }
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: var(--light);
+      color: var(--dark);
+      min-height: 100vh;
+      padding: 16px;
+    }
+    .container {
+      max-width: 480px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+    header {
+      background: var(--primary);
+      color: white;
+      padding: 20px 16px;
+      text-align: center;
+    }
+    header h1 { font-size: 1.5rem; }
+    .content { padding: 20px 16px; }
+    h2 { margin-bottom: 16px; color: var(--primary-dark); }
+    label { display:block; margin-bottom:6px; }
+    input, select, button {
+      width:100%;
+      padding:12px;
+      margin-bottom:14px;
+      border-radius:8px;
+      border:1px solid var(--gray);
+    }
+    button {
+      background: var(--primary);
+      color:white;
+      border:none;
+      font-weight:600;
+      cursor:pointer;
+    }
+    button:hover { background: var(--primary-dark); }
+    .hidden { display:none !important; }
+    .message { padding:10px; border-radius:8px; margin:12px 0; }
+    .success { background:#e8f5e9; color:var(--success); }
+    .error { background:#ffebee; color:var(--danger); }
+    .toggle-link { color:var(--primary); cursor:pointer; text-decoration:underline; }
+    .profile-header { display:flex; gap:16px; margin-bottom:20px; }
+    #user-photo {
+      width:90px; height:90px; border-radius:50%;
+      object-fit:cover; border:3px solid var(--primary);
+    }
+    .balance-box {
+      background:#e0f2f1; padding:20px; border-radius:12px;
+      text-align:center; margin-bottom:20px;
+    }
+    .amount { font-size:2rem; font-weight:700; }
+    table { width:100%; border-collapse:collapse; }
+    th, td { padding:10px; border-bottom:1px solid var(--gray); }
+    .positive { color:var(--success); }
+    .negative { color:var(--danger); }
+    .center { text-align:center; padding:20px; color:#777; }
+  </style>
+</head>
+
+<body>
+<div class="container">
+
+<header>
+  <h1>Panama International Bank</h1>
+  <p>Educational Demo</p>
+</header>
+
+<div class="content">
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <h2>Sign In</h2>
+  <form id="frm-login">
+    <input id="login-email" type="email" placeholder="Email" required>
+    <input id="login-password" type="password" placeholder="Password" required>
+    <button>Sign In</button>
+  </form>
+  <p class="center">New user? <span class="toggle-link" id="to-register">Create Account</span></p>
+  <div id="login-msg" class="message hidden"></div>
+</div>
+
+<!-- REGISTER -->
+<div id="register-screen" class="hidden">
+  <h2>Create Account</h2>
+  <form id="frm-register">
+    <input id="reg-name" placeholder="Full Name" required>
+    <input id="reg-email" type="email" placeholder="Email" required>
+    <input id="reg-password" type="password" placeholder="Password" required>
+    <input id="reg-id" placeholder="ID / Passport" required>
+    <select id="reg-country" required>
+      <option value="">Select Country</option>
+      <option value="PA">Panama</option>
+      <option value="US">USA</option>
+      <option value="NG">Nigeria</option>
+    </select>
+    <input id="reg-passport" type="file" accept="image/*" required>
+    <button>Create Account</button>
+  </form>
+  <p class="center">Already registered? <span class="toggle-link" id="to-login">Sign In</span></p>
+  <div id="register-msg" class="message hidden"></div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard-screen" class="hidden">
+  <div class="profile-header">
+    <img id="user-photo">
+    <div>
+      <div id="user-name"></div>
+      <div id="user-id"></div>
+      <div id="user-country"></div>
+    </div>
+  </div>
+
+  <div class="balance-box">
+    Balance (USD)
+    <div class="amount">$<span id="user-balance">0.00</span></div>
+  </div>
+
+  <button id="btn-new-transfer">New Transfer</button>
+  <button id="btn-add-funds">Add Funds</button>
+
+  <h2>Transactions</h2>
+  <table>
+    <thead>
+      <tr><th>Date</th><th>Amount</th><th>Description</th></tr>
+    </thead>
+    <tbody id="tx-body"></tbody>
+  </table>
+  <div id="no-tx-msg" class="center hidden">No transactions</div>
+
+  <button id="btn-logout">Sign Out</button>
+</div>
+
+<!-- TRANSFER -->
+<div id="transfer-screen" class="hidden">
+  <h2>New Transfer</h2>
+  <form id="frm-transfer">
+    <select id="tx-type" required>
+      <option value="">Type</option>
+      <option value="domestic">Domestic</option>
+      <option value="international">International</option>
+    </select>
+    <input id="tx-recipient" placeholder="Recipient" required>
+    <input id="tx-amount" type="number" step="0.01" placeholder="Amount" required>
+    <input id="tx-description" placeholder="Description">
+    <button>Send</button>
+  </form>
+  <span class="toggle-link" id="cancel-transfer">Cancel</span>
+  <div id="transfer-msg" class="message hidden"></div>
+</div>
+
+<!-- ADD FUNDS -->
+<div id="add-funds-screen" class="hidden">
+  <h2>Add Funds</h2>
+  <form id="frm-add-funds">
+    <input id="fund-amount" type="number" step="0.01" placeholder="Amount" required>
+    <select id="fund-source" required>
+      <option value="">Source</option>
+      <option value="bank">Bank</option>
+      <option value="card">Card</option>
+    </select>
+    <button>Add</button>
+  </form>
+  <span class="toggle-link" id="cancel-add-funds">Cancel</span>
+  <div id="add-funds-msg" class="message hidden"></div>
+</div>
+
+</div>
+</div>
+
+<script type="module">
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+
+const supabase = createClient(
+  "https://sdefqninxwqsximgmgca.supabase.co",
+  "sb_publishable_-8j-Gt4OiJFWcL2R2bhJsw_Siznvz52"
+);
+
+const $ = id => document.getElementById(id);
+const show = id => $(id).classList.remove("hidden");
+const hide = id => $(id).classList.add("hidden");
+
+function showMsg(id, msg, ok=false){
+  const el = $(id);
+  el.textContent = msg;
+  el.className = `message ${ok?"success":"error"}`;
+  show(id);
+}
+
+/* NAV */
+$("to-register").onclick = () => { hide("login-screen"); show("register-screen"); };
+$("to-login").onclick = () => { hide("register-screen"); show("login-screen"); };
+
+/* REGISTER */
+$("frm-register").onsubmit = async e => {
+  e.preventDefault();
+  const { data:{user}, error } = await supabase.auth.signUp({
+    email: $("reg-email").value,
+    password: $("reg-password").value
+  });
+  if(error) return showMsg("register-msg", error.message);
+  showMsg("register-msg","Account created!",true);
+};
+
+/* LOGIN */
+$("frm-login").onsubmit = async e => {
+  e.preventDefault();
+  const { data:{user}, error } = await supabase.auth.signInWithPassword({
+    email: $("login-email").value,
+    password: $("login-password").value
+  });
+  if(error) return showMsg("login-msg", error.message);
+  hide("login-screen"); show("dashboard-screen");
+};
+
+/* LOGOUT */
+$("btn-logout").onclick = async ()=>{
+  await supabase.auth.signOut();
+  location.reload();
+};
+</script>
+</body>
+</html>
