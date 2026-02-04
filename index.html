@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panama International Bank – Demo</title>
+
+<style>
+:root{
+  --brand:#0bbf7a;
+  --brand-dark:#099e66;
+  --bg:#f3f5f7;
+  --card:#ffffff;
+  --text:#1f2937;
+  --muted:#6b7280;
+  --success:#16a34a;
+  --danger:#dc2626;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:system-ui,-apple-system,Segoe UI,Roboto;
+  background:var(--bg);
+  color:var(--text);
+  padding:14px;
+}
+.container{max-width:420px;margin:auto}
+header{
+  background:linear-gradient(135deg,var(--brand),var(--brand-dark));
+  color:#fff;
+  padding:22px 18px;
+  border-radius:20px;
+  margin-bottom:16px;
+}
+header h1{font-size:1.4rem}
+header p{opacity:.9;font-size:.85rem}
+.card{
+  background:var(--card);
+  border-radius:18px;
+  padding:18px;
+  box-shadow:0 6px 20px rgba(0,0,0,.06);
+  margin-bottom:16px;
+}
+label{font-size:.85rem;color:var(--muted);margin-bottom:6px;display:block}
+input,select,button{
+  width:100%;
+  padding:14px;
+  border-radius:14px;
+  border:1px solid #e5e7eb;
+  font-size:1rem;
+  margin-bottom:14px;
+}
+button{
+  background:var(--brand);
+  color:#fff;
+  border:none;
+  font-weight:600;
+}
+button.secondary{
+  background:#e8faf3;
+  color:var(--brand-dark);
+}
+.hidden{display:none}
+.message{padding:12px;border-radius:14px}
+.success{background:#ecfdf5;color:var(--success)}
+.error{background:#fef2f2;color:var(--danger)}
+.profile{
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+.profile img{
+  width:70px;
+  height:70px;
+  border-radius:50%;
+  object-fit:cover;
+  border:2px solid var(--brand);
+}
+.balance-card{
+  background:linear-gradient(135deg,#0bbf7a,#14e19a);
+  color:#fff;
+  border-radius:20px;
+  padding:20px;
+  margin-bottom:16px;
+}
+.balance-amount{
+  font-size:2.3rem;
+  font-weight:800;
+}
+.actions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+.action-btn{
+  background:#f8fffc;
+  border-radius:16px;
+  padding:16px;
+  text-align:center;
+  font-weight:600;
+  color:var(--brand-dark);
+  box-shadow:0 4px 12px rgba(0,0,0,.05);
+  cursor:pointer;
+}
+table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:.9rem;
+}
+th,td{
+  padding:10px 0;
+  border-bottom:1px solid #f1f5f9;
+}
+.positive{color:var(--success)}
+.negative{color:var(--danger)}
+.center{text-align:center;color:var(--muted)}
+.toggle-link{color:var(--brand-dark);font-weight:600;cursor:pointer}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<header>
+  <h1>Panama International Bank</h1>
+  <p>Educational Fintech Demo</p>
+</header>
+
+<!-- LOGIN -->
+<div id="login-screen" class="card">
+  <h3>Sign In</h3>
+  <form id="frm-login">
+    <input id="login-email" type="email" placeholder="Email" required>
+    <input id="login-password" type="password" placeholder="Password" required>
+    <button>Sign In</button>
+  </form>
+  <p class="center">New user? <span class="toggle-link" id="to-register">Create account</span></p>
+  <div id="login-msg" class="message hidden"></div>
+</div>
+
+<!-- REGISTER -->
+<div id="register-screen" class="card hidden">
+  <h3>Create Account</h3>
+  <form id="frm-register">
+    <input id="reg-name" placeholder="Full Name" required>
+    <input id="reg-email" type="email" placeholder="Email" required>
+    <input id="reg-password" type="password" placeholder="Password" minlength="6" required>
+    <input id="reg-phone" placeholder="Phone Number" required>
+    <label>Date of Birth</label>
+    <input id="reg-dob" type="date" required>
+    <select id="reg-gender" required>
+      <option value="">Gender</option>
+      <option>Male</option>
+      <option>Female</option>
+      <option>Other</option>
+    </select>
+    <input id="reg-address" placeholder="Residential Address" required>
+    <select id="reg-country" required>
+      <option value="">Country</option>
+      <option value="NG">Nigeria</option>
+      <option value="US">United States</option>
+      <option value="GB">United Kingdom</option>
+      <option value="PA">Panama</option>
+    </select>
+    <label>Profile Photo</label>
+    <input id="reg-passport" type="file" accept="image/*" required>
+    <button>Create Account</button>
+  </form>
+  <p class="center"><span class="toggle-link" id="to-login">Back to login</span></p>
+  <div id="register-msg" class="message hidden"></div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard-screen" class="hidden">
+
+  <div class="card profile">
+    <img id="user-photo">
+    <div>
+      <div id="user-name" style="font-weight:700"></div>
+      <div id="user-email"></div>
+      <div id="user-phone"></div>
+    </div>
+  </div>
+
+  <div class="balance-card">
+    <small>Available Balance</small>
+    <div class="balance-amount">$<span id="user-balance">0.00</span></div>
+  </div>
+
+  <div class="actions">
+    <div class="action-btn" id="btn-new-transfer">Transfer</div>
+    <div class="action-btn" id="btn-add-funds">Add Funds</div>
+  </div>
+
+  <div class="card">
+    <select id="account-menu">
+      <option value="">Account Menu</option>
+      <option value="profile">Profile Details</option>
+      <option value="transactions">Transaction History</option>
+      <option value="logout">Logout</option>
+    </select>
+  </div>
+
+  <div class="card">
+    <h4>Transactions</h4>
+    <table>
+      <thead>
+        <tr><th>Date</th><th>Amount</th><th>Description</th></tr>
+      </thead>
+      <tbody id="tx-body"></tbody>
+    </table>
+    <div id="no-tx-msg" class="center hidden">No transactions yet</div>
+  </div>
+
+</div>
+
+</div>
+
+<script type="module">
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+
+const supabase = createClient(
+  "https://sdefqninxwqsximgmgca.supabase.co",
+  "sb_publishable_-8j-Gt4OiJFWcL2R2bhJsw_Siznvz52"
+);
+
+const $ = id => document.getElementById(id);
+const show = id => $(id).classList.remove("hidden");
+const hide = id => $(id).classList.add("hidden");
+const msg = (id,text,ok=false)=>{
+  const el=$(id);
+  el.textContent=text;
+  el.className=`message ${ok?'success':'error'}`;
+  show(id);
+};
+
+$("to-register").onclick=()=>{hide("login-screen");show("register-screen")};
+$("to-login").onclick=()=>{hide("register-screen");show("login-screen")};
+
+$("frm-register").onsubmit=async e=>{
+  e.preventDefault();
+  try{
+    const email=$("reg-email").value;
+    const password=$("reg-password").value;
+    const file=$("reg-passport").files[0];
+
+    const {data,error}=await supabase.auth.signUp({email,password});
+    if(error) throw error;
+
+    const user=data.user;
+    const ext=file.name.split(".").pop();
+    const path=`${user.id}/profile.${ext}`;
+
+    await supabase.storage.from("passports")
+      .upload(path,file,{upsert:true});
+
+    await supabase.from("profiles").insert({
+      user_id:user.id,
+      name:$("reg-name").value,
+      email,
+      phone:$("reg-phone").value,
+      dob:$("reg-dob").value,
+      gender:$("reg-gender").value,
+      address:$("reg-address").value,
+      country_code:$("reg-country").value,
+      photo_path:path,
+      balance:0
+    });
+
+    msg("register-msg","Account created successfully",true);
+  }catch(err){
+    msg("register-msg",err.message);
+  }
+};
+
+$("frm-login").onsubmit=async e=>{
+  e.preventDefault();
+  const {data,error}=await supabase.auth.signInWithPassword({
+    email:$("login-email").value,
+    password:$("login-password").value
+  });
+  if(error) return msg("login-msg",error.message);
+  loadDashboard(data.user.id);
+};
+
+async function loadDashboard(userId){
+  hide("login-screen");
+  hide("register-screen");
+  show("dashboard-screen");
+
+  const {data:p}=await supabase
+    .from("profiles")
+    .select("*")
+    .eq("user_id",userId)
+    .single();
+
+  $("user-name").textContent=p.name;
+  $("user-email").textContent=p.email;
+  $("user-phone").textContent=p.phone;
+  $("user-balance").textContent=Number(p.balance).toFixed(2);
+
+  if(p.photo_path){
+    const {data}=supabase.storage.from("passports").getPublicUrl(p.photo_path);
+    $("user-photo").src=data.publicUrl;
+  }
+}
+
+$("account-menu").onchange=e=>{
+  if(e.target.value==="logout"){
+    supabase.auth.signOut().then(()=>location.reload());
+  }
+};
+</script>
+</body>
+</html>
